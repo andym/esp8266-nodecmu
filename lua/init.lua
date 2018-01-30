@@ -8,8 +8,7 @@ function startup()
     else
         print("Running")
         file.close("init.lua")
-        -- the actual application is stored in 'application.lua'
-        -- dofile("application.lua")
+        -- the actual application is stored in 'mqtt-client.lua'
         dofile("mqtt-client.lua")
     end
 end

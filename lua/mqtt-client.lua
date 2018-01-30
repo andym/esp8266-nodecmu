@@ -3,6 +3,7 @@
 
 -- MQTT_HOST, MQTT_USER, MQTT_PASSWORD
 -- all defined in credentials.lua
+dofile("credentials.lua")
 
 -- inspired by 
 -- https://www.allaboutcircuits.com/projects/introduction-to-the-mqtt-protocol-on-nodemcu/
@@ -21,11 +22,6 @@ end
 -- Holds dispatching keys to different topics. Serves as a makeshift callback
 -- function dispatcher based on topic and message content
 m_dis = {}
-
-m = mqtt.Client("clientid", 120, MQTT_USER, MQTT_PASSWORD)
-
-m:on("connect", function(client) print ("connected") end)
-m:on("offline", function(client) print ("offline") end)
 
 local function publishtemp()
     if we_have_temp_module == 1 then
@@ -82,7 +78,10 @@ m_dis["mcu/cmd/fileinfo"] = cmdfileinfo
 -- do file
 
 local function mqtt_init()
-  m = mqtt.Client(chipId, 5, mqttUser, mqttUserPassword)
+  m = mqtt.Client(chipId, 5, MQTT_USER, MQTT_PASSWORD)
+
+  m:on("connect", function(client) print ("connected") end)
+  m:on("offline", function(client) print ("offline") end)
 
   m:lwt("events/esp8266/".. chipId .."/status",
     sjson.encode({
@@ -115,8 +114,6 @@ local function mqtt_init()
     publishtemp()
   end)
 
-  --m:on("message", switch_relay)
-  --m:on("message", function() print ("relay switched") end)
   m:on("message", function(m,t,pl)
         print("PAYLOAD: ", pl)
         print("TOPIC: ", t)
