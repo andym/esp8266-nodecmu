@@ -9,6 +9,7 @@ dofile("credentials.lua")
 -- https://www.allaboutcircuits.com/projects/introduction-to-the-mqtt-protocol-on-nodemcu/
 -- https://github.com/breagan/ESP8266_WiFi_File_Manager/tree/master/Lua_files
 -- https://gondogblegudug.wordpress.com/2016/12/05/nodemcu-reconnect-mqtt-on-wifi-autoconnect/
+-- https://github.com/nodemcu/nodemcu-firmware/blob/master/lua_examples/mqtt/mqtt_file.lua
 
 chipId = node.chipid()
 we_have_temp_module = 0
@@ -65,17 +66,37 @@ local function cmdfileinfo()
       unused_bytes = u,
       remaining_bytes = r
       }), 0, 0)
- end
+end
 
--- As part of the dispatcher algorithm, this assigns a topic name as a key or
--- index to a particular function name
-m_dis["mcu/cmd/restart"] = cmdrestart
-m_dis["mcu/cmd/fileinfo"] = cmdfileinfo
--- delete a file
--- start a new file
--- append a line (or block?) to a file - base64 encode?
--- compile a file?
--- do file
+local function pubfile(m,filename)
+    file.close()
+    file.open(filename)
+    repeat
+    local pl=file.read(1024)
+    if pl then m:publish("events/esp8266/".. chipId .."/filecontents",pl,0,0) end
+    until not pl
+    file.close()
+end
+
+function handlecmd(m,pl)
+    print("get cmd: "..pl)
+    local pack = sjson.decode(pl)
+    if pack.content then
+        if pack.cmd == "open" then file.open(pack.content,"w+")
+        elseif pack.cmd == "write" then file.write(pack.content)
+        elseif pack.cmd == "close" then file.close()
+        elseif pack.cmd == "remove" then file.remove(pack.content)
+        elseif pack.cmd == "run" then dofile(pack.content)
+        elseif pack.cmd == "read" then pubfile(m, pack.content)
+        -- rename
+        elseif pack.cmd == "restart" then cmdrestart()
+        elseif pack.cmd == "fileinfo" then cmdfileinfo()
+        end
+    end
+end
+
+-- all messages to this topic -> handled by this function
+m_dis["mcu/cmd/" .. chipId]=handlecmd
 
 local function mqtt_init()
   m = mqtt.Client(chipId, 5, MQTT_USER, MQTT_PASSWORD)
