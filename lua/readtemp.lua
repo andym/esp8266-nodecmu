@@ -1,12 +1,12 @@
--- hello
 sda, scl = 2,1
-we_have_temp_module = 0
+we_have_temp_module = 1
 
  -- call i2c.setup() only once
 
-if pcall(i2c.setup(0, sda, scl, i2c.SLOW)) then
-    we_have_temp_module = 1
-end
+i2c.setup(0, sda, scl, i2c.SLOW)
+--if pcall(i2c.setup(0, sda, scl, i2c.SLOW)) then
+--    we_have_temp_module = 1
+--end
 
 if we_have_temp_module == 1 then
     am2320.setup()
@@ -18,3 +18,5 @@ if we_have_temp_module == 1 then
     print(string.format("RH: %s%%", rh / 10))
     print(string.format("Temperature: %s degrees C", t / 10))
 end
+
+print("we have temp module : " .. we_have_temp_module)

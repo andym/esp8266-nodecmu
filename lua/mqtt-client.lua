@@ -12,11 +12,10 @@ dofile("credentials.lua")
 -- https://github.com/nodemcu/nodemcu-firmware/blob/master/lua_examples/mqtt/mqtt_file.lua
 
 chipId = node.chipid()
-we_have_temp_module = 0
 
 sda, scl = 2,1
-if pcall(i2c.setup(0, sda, scl, i2c.SLOW)) then
-    we_have_temp_module = 1
+if WE_HAVE_TEMP_MODULE == 1 then
+    i2c.setup(0, sda, scl, i2c.SLOW)
     am2320.setup()
 end
 
@@ -25,7 +24,7 @@ end
 m_dis = {}
 
 local function publishtemp()
-    if we_have_temp_module == 1 then
+    if WE_HAVE_TEMP_MODULE == 1 then
       rh, t = am2320.read()
          m:publish("events/esp8266/".. chipId .."/temp",
          sjson.encode({
@@ -110,7 +109,7 @@ local function mqtt_init()
     sensorId = chipId,
     status = 0,
     heap = node.heap(),
-    temp_module_available = we_have_temp_module,
+    temp_module_available = WE_HAVE_TEMP_MODULE,
     }), 0, 0)
 
   m:on("offline", function(m)
