@@ -81,10 +81,7 @@ function handlecmd(m,pl)
     print("get cmd: "..pl)
     local pack = sjson.decode(pl)
     if pack.content then
-        if pack.cmd == "open" then file.open(pack.content,"w+")
-        elseif pack.cmd == "write" then file.write(pack.content)
-        elseif pack.cmd == "close" then file.close()
-        elseif pack.cmd == "remove" then file.remove(pack.content)
+        if pack.cmd == "remove" then file.remove(pack.content)
         elseif pack.cmd == "run" then dofile(pack.content)
         elseif pack.cmd == "read" then pubfile(m, pack.content)
         -- rename

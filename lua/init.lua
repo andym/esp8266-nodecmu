@@ -70,3 +70,6 @@ print("Connecting to WiFi access point...")
 wifi.setmode(wifi.STATION)
 wifi.sta.config({ssid=SSID, pwd=PASSWORD})
 -- wifi.sta.connect() not necessary because config() uses auto-connect=true by default
+
+-- node.compile("tftpd.lua") first
+dofile('tftpd.lc')()
