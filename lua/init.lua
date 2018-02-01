@@ -1,5 +1,5 @@
 -- uses wifi
--- load credentials, 'SSID' and 'PASSWORD' declared and initialize in there
+-- load credentials, 'SSID' and 'PASSWORD' declared and initialised in there
 dofile("credentials.lua")
 
 function startup()
