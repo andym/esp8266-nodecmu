@@ -8,7 +8,7 @@ use File::Find::Rule;
 use File::Basename;
 
 # mqtt request for ip addresses
-my @hosts = ("192.168.1.214");
+my @hosts = ("192.168.1.214", "192.168.1.186");
 # glob for homedir expansion
 my $source_dir = glob('~/projects/esp8266-nodecmu/lua_install/');
 

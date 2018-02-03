@@ -1,5 +1,5 @@
 -- uses mqtt, tmr, am2320, wifi
-DEBUG=true
+--DEBUG=true
 
 -- MQTT_HOST, MQTT_USER, MQTT_PASSWORD
 -- all defined in credentials.lua
