@@ -1,5 +1,5 @@
 -- uses mqtt, tmr, am2320, wifi
---DEBUG=true
+DEBUG=true
 
 -- MQTT_HOST, MQTT_USER, MQTT_PASSWORD
 -- all defined in credentials.lua
@@ -164,8 +164,6 @@ tmr.alarm(1, 60000, 1, function()
 --    print('IP: ',wifi.sta.getip())
 --  end
 
-  publishheartbeat()
-
   if wifi.sta.getip() == nil then
     restart = true
   else
@@ -176,6 +174,8 @@ tmr.alarm(1, 60000, 1, function()
       connect()
     end
   end
+
+  publishheartbeat()
 end)
 
 -- every 5 mins
