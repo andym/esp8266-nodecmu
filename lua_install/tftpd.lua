@@ -120,7 +120,8 @@ return function(port)
                 return
             end
             file.close()
-            uart.write(0,"#")
+            file.flush()
+            --uart.write(0,"#")
             if(sz~=512) then
                 print(" done!")
                 reset()

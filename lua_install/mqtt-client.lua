@@ -4,6 +4,7 @@
 -- MQTT_HOST, MQTT_USER, MQTT_PASSWORD
 -- all defined in credentials.lua
 dofile("credentials.lua")
+file.close("credentials.lua")
 
 -- inspired by 
 -- https://www.allaboutcircuits.com/projects/introduction-to-the-mqtt-protocol-on-nodemcu/
@@ -47,8 +48,21 @@ local function publishheartbeat()
       }), 0, 0)
 end
 
+local function disconnect()
+  if DEBUG then
+    print ("Closing connections ...")
+  end
+  if m:close() then
+    print ("Connection's closed ...")
+  else
+    print ("Connection's close failed ...")
+  end
+end
+
 local function cmdrestart()
-    file.flush() -- just in case
+    file.flush()
+    disconnect()
+    wifi.sta.disconnect()
     node.restart()
 end
 
@@ -67,26 +81,16 @@ local function cmdfileinfo()
       }), 0, 0)
 end
 
-local function pubfile(m,filename)
-    file.close()
-    file.open(filename)
-    repeat
-    local pl=file.read(1024)
-    if pl then m:publish("events/esp8266/".. chipId .."/filecontents",pl,0,0) end
-    until not pl
-    file.close()
-end
-
 function handlecmd(m,pl)
     print("get cmd: "..pl)
     local pack = sjson.decode(pl)
+    if pack.cmd == "restart" then cmdrestart()
+        elseif pack.cmd == "fileinfo" then cmdfileinfo()
+        elseif pack.cmd == "ping" then publishheartbeat()
+        end
     if pack.content then
         if pack.cmd == "remove" then file.remove(pack.content)
         elseif pack.cmd == "run" then dofile(pack.content)
-        elseif pack.cmd == "read" then pubfile(m, pack.content)
-        -- rename
-        elseif pack.cmd == "restart" then cmdrestart()
-        elseif pack.cmd == "fileinfo" then cmdfileinfo()
         end
     end
 end
@@ -147,33 +151,22 @@ local function connect()
   m:connect(MQTT_HOST, 1883, 0)
 end
 
-local function disconnect()
-  if DEBUG then
-    print ("Closing connections ...")
-  end
-  if m:close() then
-    print ("Connection's closed ...")
-  else
-    print ("Connection's close failed ...")
-  end
-end
-
 -- every 60 seconds
 tmr.alarm(1, 60000, 1, function()
 --  if DEBUG then
 --    print('IP: ',wifi.sta.getip())
 --  end
 
-  if wifi.sta.getip() == nil then
-    restart = true
-  else
-    if restart == true then
-      restart = false
-      m = nil
-      mqtt_init()
-      connect()
-    end
-  end
+--  if wifi.sta.getip() == nil then
+--    restart = true
+--  else
+--    if restart == true then
+--      restart = false
+--      m = nil
+--      mqtt_init()
+--      connect()
+--    end
+--  end
 
   publishheartbeat()
 end)
