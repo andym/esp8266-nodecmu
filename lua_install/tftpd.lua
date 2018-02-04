@@ -119,8 +119,8 @@ return function(port)
                 reset()
                 return
             end
-            file.close()
             file.flush()
+            file.close()
             --uart.write(0,"#")
             if(sz~=512) then
                 print(" done!")

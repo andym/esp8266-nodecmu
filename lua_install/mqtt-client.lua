@@ -3,8 +3,8 @@
 
 -- MQTT_HOST, MQTT_USER, MQTT_PASSWORD
 -- all defined in credentials.lua
-dofile("credentials.lua")
-file.close("credentials.lua")
+dofile("credentials.lc")
+file.close("credentials.lc")
 
 -- inspired by 
 -- https://www.allaboutcircuits.com/projects/introduction-to-the-mqtt-protocol-on-nodemcu/

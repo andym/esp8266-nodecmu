@@ -1,7 +1,7 @@
 -- uses wifi
 -- load credentials, 'SSID' and 'PASSWORD' declared and initialised in there
-dofile("credentials.lua")
-file.close("credentials.lua")
+dofile("credentials.lc")
+file.close("credentials.lc")
 
 function startup()
     if file.open("init.lua") == nil then
@@ -10,11 +10,11 @@ function startup()
         print("Running")
         file.close("init.lua")
         -- node.compile("tftpd.lua") first
-        dofile('tftpd.lc')()
+        --dofile('tftpd.lc')()
         file.close('tftpd.lc')
         -- the actual application is stored in 'mqtt-client.lua'
-        dofile('mqtt-client.lua')
-        file.close('mqtt-client.lua')
+        dofile('mqtt-client.lc')
+        file.close('mqtt-client.lc')
     end
 end
 
