@@ -8,12 +8,13 @@ use File::Find::Rule;
 use File::Basename;
 
 # mqtt request for ip addresses
-my @hosts = ("192.168.1.214","192.168.1.186","192.168.1.223");
+#my @hosts = ("192.168.1.214","192.168.1.186","192.168.1.223");
+my @hosts = ("192.168.1.186");
 # glob for homedir expansion
 my $source_dir = glob('~/projects/esp8266-nodecmu/lua_install/');
 
 foreach my $host_addr (@hosts) {
-	my $tftp = Net::TFTP->new("192.168.1.214");
+	my $tftp = Net::TFTP->new($host_addr);
 	my $err = $tftp->error;
 	die "$err" if $err;
 	say "Connected to host : $host_addr";
@@ -33,3 +34,4 @@ foreach my $host_addr (@hosts) {
 	}
 	# mqtt restart host
 }
+
