@@ -124,6 +124,14 @@ return function(port)
             --uart.write(0,"#")
             if(sz~=512) then
                 print(" done!")
+                -- if fn matches .lua and isn't init.lua
+                if ((_fn~="init.lua") and (string.find(_fn, ".lua")~=nil)) then
+                    node.compile(_fn)
+                    print(" compiled!")
+                     -- if that worked...
+                    file.remove(_fn)
+                    print(" removed!")
+                end
                 reset()
             end
             collectgarbage()
