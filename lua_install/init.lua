@@ -10,7 +10,7 @@ function startup()
         print("Running")
         file.close("init.lua")
         -- node.compile("tftpd.lua") first
-        --dofile('tftpd.lc')()
+        dofile('tftpd.lc')()
         file.close('tftpd.lc')
         -- the actual application is stored in 'mqtt-client.lua'
         dofile('mqtt-client.lc')
@@ -53,7 +53,7 @@ wifi_disconnect_event = function(T)
   end
 
   if disconnect_ct == nil then 
-    disconnect_ct = 1 
+    disconnect_ct = 0
   else
     disconnect_ct = disconnect_ct + 1 
   end
