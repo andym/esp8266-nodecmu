@@ -9,7 +9,6 @@ function startup()
     else
         print("Running")
         file.close("init.lua")
-        -- node.compile("tftpd.lua") first
         dofile('tftpd.lc')()
         file.close('tftpd.lc')
         -- the actual application is stored in 'mqtt-client.lua'

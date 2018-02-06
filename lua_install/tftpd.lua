@@ -125,6 +125,7 @@ return function(port)
             if(sz~=512) then
                 print(" done!")
                 -- if fn matches .lua and isn't init.lua
+                -- then we compile and remove it
                 if ((_fn~="init.lua") and (string.find(_fn, ".lua")~=nil)) then
                     node.compile(_fn)
                     print(" compiled!")
