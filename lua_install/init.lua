@@ -12,7 +12,7 @@ function startup()
         dofile('tftpd.lc')()
         file.close('tftpd.lc')
 
-        mdns.register("esp" ... node.chipid(), {hardware='NodeMCU'})
+        mdns.register("esp" .. node.chipid(), {hardware='NodeMCU'})
 
         dofile('mqtt-client.lc')
         file.close('mqtt-client.lc')
