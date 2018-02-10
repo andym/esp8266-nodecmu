@@ -99,12 +99,12 @@ tmr.alarm(1, 60000, 1, function()
   publishheartbeat()
 end)
 
-local function restart()
+--local function restart()
     -- [[ Temporary solution of a bug #2197 ]]
     -- [[ Restart ESP if disconnect occurred after connecting ]] --
-    print ("RESTART CHIP  RESTART CHIP  RESTART CHIP  Time:"..tmr.time())
-    node.restart()
-end
+--    print ("RESTART CHIP  RESTART CHIP  RESTART CHIP  Time:"..tmr.time())
+--    node.restart()
+--end
 
 m:on("offline", function(client)
     print ("MQTT: Broker going to offline")
@@ -138,10 +138,10 @@ end
 local function mqtt_error(client, reason)
     print("MQTT: Connecting failed. Reason:"..reason)
 
-    if is_connected then
-        restart()
-        return
-    end
+    --if is_connected then
+    --    restart()
+    --    return
+    --end
     
     is_connected = false
     timer_mqtt_connect:start()
