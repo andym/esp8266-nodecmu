@@ -6,9 +6,9 @@
 dofile("credentials.lc")
 file.close("credentials.lc")
 
-chipId = node.chipid()
+local chipId = node.chipid()
+local my_ip = wifi.sta.getip()
 
-local we_have_temp_module = 0
 local is_connected = false
 local timer_mqtt_connect = tmr.create()
 local m = mqtt.Client(chipId, 5, MQTT_USER, MQTT_PASSWORD, 1)
@@ -21,8 +21,7 @@ local m = mqtt.Client(chipId, 5, MQTT_USER, MQTT_PASSWORD, 1)
 -- https://github.com/nodemcu/nodemcu-firmware/issues/2197#issuecomment-362999363
 
 sda, scl = 2,1
-if pcall(i2c.setup(0, sda, scl, i2c.SLOW)) then
-    we_have_temp_module = 1
+if WE_HAVE_TEMP_MODULE == 1 then
     i2c.setup(0, sda, scl, i2c.SLOW)
     am2320.setup()
 end
@@ -32,7 +31,7 @@ end
 m_dis = {}
 
 local function publishtemp()
-     if we_have_temp_module == 1 then
+     if WE_HAVE_TEMP_MODULE == 1 then
        rh, t = am2320.read()
           m:publish("events/esp8266/".. chipId .."/temp",
           sjson.encode({
@@ -52,6 +51,7 @@ local function publishheartbeat()
       status = 1,
       heap = node.heap(),
       now = tmr.now(),
+      ip = my_ip,
       }), 0, 0)
 end
 

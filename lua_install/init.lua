@@ -1,4 +1,4 @@
--- uses wifi
+-- uses wifi, mdns, node
 -- load credentials, 'SSID' and 'PASSWORD' declared and initialised in there
 dofile("credentials.lc")
 file.close("credentials.lc")
@@ -11,7 +11,9 @@ function startup()
         file.close("init.lua")
         dofile('tftpd.lc')()
         file.close('tftpd.lc')
-        -- the actual application is stored in 'mqtt-client.lua'
+
+        mdns.register("esp" ... node.chipid(), {hardware='NodeMCU'})
+
         dofile('mqtt-client.lc')
         file.close('mqtt-client.lc')
     end
