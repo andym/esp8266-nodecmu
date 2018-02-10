@@ -36,9 +36,9 @@ local function publishtemp()
        rh, t = am2320.read()
           m:publish("events/esp8266/".. chipId .."/temp",
           sjson.encode({
-          temp = (t / 10),
+          temp = t,
           sensorId = chipId,
-          humidity = (rh / 10),
+          humidity = rh,
           heap = node.heap()
        }), 0, 0)
      end
