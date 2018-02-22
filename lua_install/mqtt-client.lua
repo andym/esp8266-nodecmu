@@ -39,7 +39,7 @@ local function publishtemp()
           sensorId = chipId,
           humidity = rh,
           heap = node.heap()
-       }), 0, 0)
+       }), 0, 1)
      end
 end
 
